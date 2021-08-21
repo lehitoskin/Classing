@@ -5,18 +5,18 @@ namespace Classing
     public interface IPart
     {
         // part number/serial number
-        public int getPartNumber();
-        public void setPartNumber(int pn);
+        public int GetPartNumber();
+        public void SetPartNumber(int pn);
 
         // monitor, keyboard, etc
-        public string getModel();
-        public void setModel(string m);
+        public string GetModel();
+        public void SetModel(string m);
 
         // company name/supplier
-        public string getManufacturer();
-        public void setManufacturer(string m);
+        public string GetManufacturer();
+        public void SetManufacturer(string m);
 
         // display all information about a part object
-        public void display();
+        public void Display();
     }
 }

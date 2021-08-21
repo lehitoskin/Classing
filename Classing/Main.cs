@@ -5,22 +5,22 @@ namespace Classing
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Laptop l = new Laptop(0, 15, "mini", "Acer", "FreeBSD");
+            Laptop l = new(0, 15, "mini", "Acer", "FreeBSD");
             // display generated laptop object
-            l.display();
+            l.Display();
 
             Console.WriteLine();
 
             // rewrite laptop object
-            l.setPartNumber(1);
-            l.setModel("pro");
-            l.setManufacturer("Toshiba");
-            l.setSize(13);
-            l.setOS("Windows 10");
+            l.SetPartNumber(1);
+            l.SetModel("pro");
+            l.SetManufacturer("Toshiba");
+            l.SetSize(13);
+            l.SetOS("Windows 10");
             // display modified object
-            l.display();
+            l.Display();
         }
     }
 }

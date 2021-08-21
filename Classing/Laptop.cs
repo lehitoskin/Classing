@@ -17,22 +17,22 @@ namespace Classing
             this.os = os;
         }
 
-        public int getPartNumber() { return partNumber; }
-        public void setPartNumber(int pn) { partNumber = pn; }
+        public int GetPartNumber() { return partNumber; }
+        public void SetPartNumber(int pn) { partNumber = pn; }
 
-        public int getSize() { return size; }
-        public void setSize(int s) { size = s; }
+        public int GetSize() { return size; }
+        public void SetSize(int s) { size = s; }
 
-        public string getModel() { return model; }
-        public void setModel(string m) { model = m; }
+        public string GetModel() { return model; }
+        public void SetModel(string m) { model = m; }
 
-        public string getManufacturer() { return manufacturer; }
-        public void setManufacturer(string m) { manufacturer = m; }
+        public string GetManufacturer() { return manufacturer; }
+        public void SetManufacturer(string m) { manufacturer = m; }
 
-        public string getOS() { return os; }
-        public void setOS(string os) { this.os = os; }
+        public string GetOS() { return os; }
+        public void SetOS(string os) { this.os = os; }
 
-        public void display()
+        public void Display()
         {
             Console.WriteLine("Laptop:");
             Console.WriteLine("Part #{0}", partNumber);
