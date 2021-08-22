@@ -32,10 +32,7 @@ namespace Classing
             Console.WriteLine($"DEBUG; ret: {ret}");
         }
 
-        ~DB()
-        {
-            conn.Close();
-        }
+        ~DB() { conn.Close(); }
 
         public void GetDbName() { Console.WriteLine(conn.Database); }
 
@@ -123,6 +120,24 @@ namespace Classing
                 string.Join(", ", d.GetPeripherals()));
             int ret = cmd.ExecuteNonQuery();
             Console.WriteLine($"DEBUG; ret: {ret}");
+        }
+
+        public void DeleteLaptop(Laptop l)
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "delete from Laptop where PartNumber = $pn;";
+            cmd.Parameters.AddWithValue("$pn", l.GetPartNumber());
+            int ret = cmd.ExecuteNonQuery();
+            Console.WriteLine($"DEBUG; DeleteLaptop ret: {ret}");
+        }
+
+        public void DeleteDesktop(Desktop d)
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "delete from Desktop where PartNumber = $pn;";
+            cmd.Parameters.AddWithValue("$pn", d.GetPartNumber());
+            int ret = cmd.ExecuteNonQuery();
+            Console.WriteLine($"DEBUG; DeleteDesktop ret: {ret}");
         }
     }
 }

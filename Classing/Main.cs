@@ -9,9 +9,9 @@ namespace Classing
         {
             Laptop l = new(0, "mini", "Acer", "FreeBSD", 15);
             // display generated laptop object
-            l.Display();
+            //l.Display();
 
-            Console.WriteLine();
+            //Console.WriteLine();
 
             // rewrite laptop object
             l.SetPartNumber(1);
@@ -20,22 +20,29 @@ namespace Classing
             l.SetSize(13);
             l.SetOS("Windows 10");
             // display modified object
-            l.Display();
+            //l.Display();
 
-            Console.WriteLine();
+            //Console.WriteLine();
 
             Desktop d = new(2, "Giganto", "Alienware", "Windows 10",
                 new string[] { "BDR", "S/PDIF Card" });
-            d.Display();
+            //d.Display();
 
-            Console.WriteLine("\nDB stuff:");
+            Console.WriteLine("DB stuff:");
 
             // database connection
             DB db = new();
             // reset db
             //db.ResetDatabase();
-            //db.AddLaptop(l);
-            //db.AddDesktop(d);
+
+            // add objects to the database
+            db.AddLaptop(l);
+            db.AddDesktop(d);
+
+            // delete single laptop object
+            //db.DeleteLaptop(l);
+            // delete single desktop object
+            //db.DeleteDesktop(d);
 
             Console.WriteLine("DB Laptop:");
             db.DisplayTable(DB.Table.LAPTOP);
