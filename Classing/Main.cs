@@ -36,8 +36,8 @@ namespace Classing
             //db.ResetDatabase();
 
             // add objects to the database
-            db.AddLaptop(l);
-            db.AddDesktop(d);
+            //db.AddLaptop(l);
+            //db.AddDesktop(d);
 
             // delete single laptop object
             //db.DeleteLaptop(l);

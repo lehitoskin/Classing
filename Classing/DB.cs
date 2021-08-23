@@ -34,8 +34,6 @@ namespace Classing
 
         ~DB() { conn.Close(); }
 
-        public void GetDbName() { Console.WriteLine(conn.Database); }
-
         public void DisplayTable(Table table)
         {
             using var cmd = conn.CreateCommand();
@@ -138,6 +136,43 @@ namespace Classing
             cmd.Parameters.AddWithValue("$pn", d.GetPartNumber());
             int ret = cmd.ExecuteNonQuery();
             Console.WriteLine($"DEBUG; DeleteDesktop ret: {ret}");
+        }
+
+        public Computer GetComputer(Table table, int pn)
+        {
+            using var cmd = conn.CreateCommand();
+
+            if (table == Table.LAPTOP)
+            {
+                cmd.CommandText =
+                    "select from Laptop where ProductNumber = $pn";
+                // TODO:
+                // error handling when there is no db entry for pn
+                using var reader = cmd.ExecuteReader();
+                reader.Read();
+                string model = reader.GetString(1);
+                string manufacturer = reader.GetString(2);
+                string os = reader.GetString(3);
+                int size = reader.GetInt32(4);
+
+                return new Laptop(pn, model, manufacturer, os, size);
+            }
+            else if (table == Table.DESKTOP)
+            {
+                cmd.CommandText =
+                    "select from Desktop where ProductNumber = $pn";
+                // TODO:
+                // error handling when there is no db entry for pn
+                using var reader = cmd.ExecuteReader();
+                reader.Read();
+                string model = reader.GetString(1);
+                string manufacturer = reader.GetString(2);
+                string os = reader.GetString(3);
+                string[] peripherals = reader.GetString(4).Split(", ");
+
+                return new Desktop(pn, model, manufacturer, os, peripherals);
+            }
+            else return null;
         }
     }
 }
