@@ -7,26 +7,26 @@ namespace Classing
     {
         static void Main()
         {
-            Laptop l = new(0, "mini", "Acer", "FreeBSD", 15);
+            Laptop laptop = new(0, "mini", "Acer", "FreeBSD", 15);
             // display generated laptop object
-            //l.Display();
+            laptop.Display();
 
-            //Console.WriteLine();
+            Console.WriteLine();
 
             // rewrite laptop object
-            l.SetPartNumber(1);
-            l.SetModel("pro");
-            l.SetManufacturer("Toshiba");
-            l.SetSize(13);
-            l.SetOS("Windows 10");
+            laptop.SetPartNumber(1);
+            laptop.SetModel("pro");
+            laptop.SetManufacturer("Toshiba");
+            laptop.SetSize(13);
+            laptop.SetOS("Windows 10");
             // display modified object
-            //l.Display();
+            laptop.Display();
 
             //Console.WriteLine();
 
-            Desktop d = new(2, "Giganto", "Alienware", "Windows 10",
+            Desktop desktop = new(2, "Giganto", "Alienware", "Windows 10",
                 new string[] { "BDR", "S/PDIF Card" });
-            //d.Display();
+            desktop.Display();
 
             Console.WriteLine("DB stuff:");
 
@@ -36,19 +36,28 @@ namespace Classing
             //db.ResetDatabase();
 
             // add objects to the database
-            //db.AddLaptop(l);
-            //db.AddDesktop(d);
-
-            // delete single laptop object
-            //db.DeleteLaptop(l);
-            // delete single desktop object
-            //db.DeleteDesktop(d);
+            //db.AddPart(laptop);
+            //db.AddPart(desktop);
 
             Console.WriteLine("DB Laptop:");
             db.DisplayTable(DB.Table.LAPTOP);
-
             Console.WriteLine("DB Desktop:");
             db.DisplayTable(DB.Table.DESKTOP);
+
+            // can throw an exception
+            Desktop d2 = (Desktop)db.GetPart(DB.Table.DESKTOP, 3);
+            if (d2 is not null)
+                d2.Display();
+
+            // delete single laptop object
+            //db.DeletePart(laptop);
+            // delete single desktop object
+            //db.DeletePart(desktop);
+
+            //Console.WriteLine("DB Laptop:");
+            //db.DisplayTable(DB.Table.LAPTOP);
+            //Console.WriteLine("DB Desktop:");
+            //db.DisplayTable(DB.Table.DESKTOP);
         }
     }
 }
