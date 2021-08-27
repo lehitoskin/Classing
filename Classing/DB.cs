@@ -8,7 +8,7 @@ namespace Classing
     public class DB
     {
         private readonly SqliteConnection conn;
-        public enum Table { LAPTOP, DESKTOP }
+        public enum Table { LAPTOP, DESKTOP, TABLET }
 
         public DB()
         {
@@ -28,7 +28,11 @@ namespace Classing
 
                   create table if not exists Desktop(PartNumber int primary key,
                   Model string, Manufacturer string, OS string, Peripherals
-                  string);";
+                  string);
+
+                  create table if not exists Tablet(PartNumber int primary key,
+                  Model string, Manufacturer string, OS string, Size int,
+                  Stylus boolean);";
 
             try
             {
@@ -40,7 +44,7 @@ namespace Classing
                 Console.WriteLine
                     ("ERROR; Init() SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; Init() System.InvalidOperationException");
@@ -58,6 +62,8 @@ namespace Classing
                 cmd.CommandText = "select * from Laptop;";
             else if (table == Table.DESKTOP)
                 cmd.CommandText = "select * from Desktop;";
+            else if (table == Table.TABLET)
+                cmd.CommandText = "select * from Tablet;";
 
             try
             {
@@ -89,6 +95,18 @@ namespace Classing
                         Console.WriteLine($"Peripherals [{peripherals}]");
                         Console.WriteLine();
                     }
+                    else if (table == Table.TABLET)
+                    {
+                        int size = reader.GetInt32(4);
+                        Boolean stylus = reader.GetBoolean(5);
+                        Console.WriteLine($"PartNumber {pn}");
+                        Console.WriteLine($"Model {model}");
+                        Console.WriteLine($"Manufacturer {manufacturer}");
+                        Console.WriteLine($"OS {os}");
+                        Console.WriteLine($"Size (inches) {size}");
+                        Console.WriteLine($"Has stylus? {stylus}");
+                        Console.WriteLine();
+                    }
                 }
             }
             catch (SqliteException)
@@ -96,7 +114,7 @@ namespace Classing
                 Console.WriteLine
                     ("ERROR; DisplayTable() SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; DisplayTable() System.InvalidOperationException");
@@ -115,13 +133,16 @@ namespace Classing
 
                 cmd.CommandText = "drop table if exists Desktop;";
                 cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "drop table if exists Tablet;";
+                cmd.ExecuteNonQuery();
             }
             catch (SqliteException)
             {
                 Console.WriteLine
                     ("ERROR; ResetDatabase() SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; ResetDatabase() System.InvalidOperationException");
@@ -152,7 +173,7 @@ namespace Classing
                 Console.WriteLine
                     ("ERROR; AddPart(Laptop) SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; AddPart(Laptop) System.InvalidOperationException");
@@ -183,10 +204,41 @@ namespace Classing
                 Console.WriteLine
                     ("ERROR; AddPart(Desktop) SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; AddPart(Desktop) System.InvalidOperationException");
+            }
+        }
+
+        public void AddPart(Tablet t)
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText =
+                @"insert into Tablet(PartNumber, Model, Manufacturer, OS, Size,
+                  Stylus)
+                  values($pn, $model, $manufacturer, $os, $size, $stylus);";
+            cmd.Parameters.AddWithValue("$pn", t.GetPartNumber());
+            cmd.Parameters.AddWithValue("$model", t.GetModel());
+            cmd.Parameters.AddWithValue("$manufacturer", t.GetManufacturer());
+            cmd.Parameters.AddWithValue("$os", t.GetOS());
+            cmd.Parameters.AddWithValue("$size", t.GetSize());
+            cmd.Parameters.AddWithValue("$stylus", t.GetStylus());
+
+            try
+            {
+                int ret = cmd.ExecuteNonQuery();
+                Console.WriteLine($"DEBUG; AddPart(Tablet) ret: {ret}");
+            }
+            catch (SqliteException)
+            {
+                Console.WriteLine
+                    ("ERROR; AddPart(Tablet) SQLiteException");
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine
+                    ("ERROR; AddPart(Tablet) System.InvalidOperationException");
             }
         }
 
@@ -206,7 +258,7 @@ namespace Classing
                 Console.WriteLine
                     ("ERROR; DeletePart(Laptop) SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; DeletePart(Laptop) System.InvalidOperationException");
@@ -229,10 +281,33 @@ namespace Classing
                 Console.WriteLine
                     ("ERROR; DeletePart(Desktop) SQLiteException");
             }
-            catch (System.InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine
                     ("ERROR; DeletePart(Desktop) System.InvalidOperationException");
+            }
+        }
+
+        public void DeletePart(Tablet t)
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "delete from Tablet where PartNumber = $pn;";
+            cmd.Parameters.AddWithValue("$pn", t.GetPartNumber());
+
+            try
+            {
+                int ret = cmd.ExecuteNonQuery();
+                Console.WriteLine($"DEBUG; DeletePart(Tablet) ret: {ret}");
+            }
+            catch (SqliteException)
+            {
+                Console.WriteLine
+                    ("ERROR; DeletePart(Tablet) SQLiteException");
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine
+                    ("ERROR; DeletePart(Tablet) System.InvalidOperationException");
             }
         }
 
@@ -262,7 +337,7 @@ namespace Classing
                     Console.WriteLine
                         ("ERROR; GetPart() SQLiteException encountered!");
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
                     Console.WriteLine
                         ("ERROR; GetPart() System.InvalidOperationException");
@@ -292,7 +367,36 @@ namespace Classing
                     Console.WriteLine
                         ("ERROR; GetPart() SQLiteException");
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
+                {
+                    Console.WriteLine
+                        ("ERROR; GetPart() System.InvalidOperationException");
+                }
+                return null;
+            }
+            else if (table == Table.TABLET)
+            {
+                cmd.CommandText = "select * from Tablet where PartNumber = $pn";
+                cmd.Parameters.AddWithValue("$pn", pn);
+
+                try
+                {
+                    using var reader = cmd.ExecuteReader();
+                    reader.Read();
+                    string model = reader.GetString(1);
+                    string manufacturer = reader.GetString(2);
+                    string os = reader.GetString(3);
+                    int size = reader.GetInt32(4);
+                    Boolean stylus = reader.GetBoolean(5);
+
+                    return new Tablet(pn, model, manufacturer, os, size, stylus);
+                }
+                catch (SqliteException)
+                {
+                    Console.WriteLine
+                        ("ERROR; GetPart() SQLiteException encountered!");
+                }
+                catch (InvalidOperationException)
                 {
                     Console.WriteLine
                         ("ERROR; GetPart() System.InvalidOperationException");
