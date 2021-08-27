@@ -315,14 +315,14 @@ namespace Classing
         {
             using var cmd = conn.CreateCommand();
 
-            if (table == Table.LAPTOP)
+            try
             {
-                cmd.CommandText =
-                    "select * from Laptop where PartNumber = $pn";
-                cmd.Parameters.AddWithValue("$pn", pn);
-
-                try
+                if (table == Table.LAPTOP)
                 {
+                    cmd.CommandText =
+                    "select * from Laptop where PartNumber = $pn";
+                    cmd.Parameters.AddWithValue("$pn", pn);
+
                     using var reader = cmd.ExecuteReader();
                     reader.Read();
                     string model = reader.GetString(1);
@@ -332,26 +332,12 @@ namespace Classing
 
                     return new Laptop(pn, model, manufacturer, os, size);
                 }
-                catch (SqliteException)
+                else if (table == Table.DESKTOP)
                 {
-                    Console.WriteLine
-                        ("ERROR; GetPart() SQLiteException encountered!");
-                }
-                catch (InvalidOperationException)
-                {
-                    Console.WriteLine
-                        ("ERROR; GetPart() System.InvalidOperationException");
-                }
-                return null;
-            }
-            else if (table == Table.DESKTOP)
-            {
-                cmd.CommandText =
+                    cmd.CommandText =
                     "select * from Desktop where PartNumber = $pn";
-                cmd.Parameters.AddWithValue("$pn", pn);
+                    cmd.Parameters.AddWithValue("$pn", pn);
 
-                try
-                {
                     using var reader = cmd.ExecuteReader();
                     reader.Read();
                     string model = reader.GetString(1);
@@ -362,25 +348,11 @@ namespace Classing
                     return new
                         Desktop(pn, model, manufacturer, os, peripherals);
                 }
-                catch (SqliteException)
+                else if (table == Table.TABLET)
                 {
-                    Console.WriteLine
-                        ("ERROR; GetPart() SQLiteException");
-                }
-                catch (InvalidOperationException)
-                {
-                    Console.WriteLine
-                        ("ERROR; GetPart() System.InvalidOperationException");
-                }
-                return null;
-            }
-            else if (table == Table.TABLET)
-            {
-                cmd.CommandText = "select * from Tablet where PartNumber = $pn";
-                cmd.Parameters.AddWithValue("$pn", pn);
+                    cmd.CommandText = "select * from Tablet where PartNumber = $pn";
+                    cmd.Parameters.AddWithValue("$pn", pn);
 
-                try
-                {
                     using var reader = cmd.ExecuteReader();
                     reader.Read();
                     string model = reader.GetString(1);
@@ -389,21 +361,21 @@ namespace Classing
                     int size = reader.GetInt32(4);
                     Boolean stylus = reader.GetBoolean(5);
 
-                    return new Tablet(pn, model, manufacturer, os, size, stylus);
+                    return new
+                        Tablet(pn, model, manufacturer, os, size, stylus);
                 }
-                catch (SqliteException)
-                {
-                    Console.WriteLine
-                        ("ERROR; GetPart() SQLiteException encountered!");
-                }
-                catch (InvalidOperationException)
-                {
-                    Console.WriteLine
-                        ("ERROR; GetPart() System.InvalidOperationException");
-                }
-                return null;
             }
-            else return null;
+            catch (SqliteException)
+            {
+                Console.WriteLine
+                    ("ERROR; GetPart() SQLiteException encountered!");
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine
+                    ("ERROR; GetPart() System.InvalidOperationException");
+            }
+            return null;
         }
     }
 }
