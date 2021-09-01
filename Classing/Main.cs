@@ -6,7 +6,6 @@ namespace Classing
     class Program
     {
         // TODO: delete part helper function (int pn, DB.Table table)
-        // TODO: get part helper function (int pn, DB.Table table)
         // TODO: list table helper function (DB.Table table)
 
         private static void AddPart(DB db)
@@ -102,6 +101,70 @@ namespace Classing
             } while (selection != "0");
         }
 
+        private static void GetPart(DB db)
+        {
+            string selection;
+            int pn;
+            Console.WriteLine("\tGet Part");
+
+            do
+            {
+                Console.WriteLine("Selections:");
+                Console.WriteLine("1: Get Laptop");
+                Console.WriteLine("2: Get Desktop");
+                Console.WriteLine("3: Get Tablet");
+                Console.WriteLine("0: Return to main menu");
+                Console.Write("> ");
+                selection = Console.ReadLine();
+                
+                if (selection.Equals("1"))
+                {
+                    Console.Write("Please enter a part number: ");
+                    pn = Int32.Parse(Console.ReadLine());
+
+                    Laptop laptop = (Laptop)db.GetPart(DB.Table.LAPTOP, pn);
+
+                    if (laptop is null)
+                        Console.WriteLine("No laptop found with that number.");
+                    else
+                        laptop.Display();
+                }
+                else if (selection.Equals("2"))
+                {
+                    Console.Write("Please enter a part number: ");
+                    pn = Int32.Parse(Console.ReadLine());
+
+                    Desktop desktop = (Desktop)db.GetPart(DB.Table.DESKTOP, pn);
+
+                    if (desktop is null)
+                        Console.WriteLine("No desktop found with that number.");
+                    else
+                        desktop.Display();
+                }
+                else if (selection.Equals("3"))
+                {
+                    Console.Write("Please enter a part number: ");
+                    pn = Int32.Parse(Console.ReadLine());
+
+                    Tablet tablet = (Tablet)db.GetPart(DB.Table.TABLET, pn);
+
+                    if (tablet is null)
+                        Console.WriteLine("No tablet found with that number.");
+                    else
+                        tablet.Display();
+                }
+                else if (selection.Equals("0"))
+                {
+                    Console.WriteLine("Returning to the main menu");
+                }
+                else
+                {
+                    Console.WriteLine
+                        ($"Selection \"{selection}\" is not understood");
+                }
+            } while (selection != "0");
+        }
+
         public static void Main()
         {
             DB db = new();
@@ -128,7 +191,7 @@ namespace Classing
                         Console.WriteLine("Found string \"2\"");
                         break;
                     case "3":
-                        Console.WriteLine("Found string \"3\"");
+                        GetPart(db);
                         break;
                     case "4":
                         Console.WriteLine("Found string \"4\"");
