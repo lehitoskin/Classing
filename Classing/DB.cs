@@ -65,6 +65,7 @@ namespace Classing
             else if (table == Table.TABLET)
                 cmd.CommandText = "select * from Tablet;";
 
+            // TODO: prettier printing
             try
             {
                 using var reader = cmd.ExecuteReader();
