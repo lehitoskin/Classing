@@ -5,7 +5,6 @@ namespace Classing
 {
     class Program
     {
-        // TODO: delete part helper function (int pn, DB.Table table)
         // TODO: list table helper function (DB.Table table)
 
         private static void AddPart(DB db)
@@ -98,7 +97,71 @@ namespace Classing
                     Console.WriteLine
                         ($"Selection \"{selection}\" is not understood");
                 }
-            } while (selection != "0");
+            } while (!selection.Equals("0"));
+        }
+
+        private static void DeletePart(DB db)
+        {
+            string selection;
+            int pn;
+            Console.WriteLine("\tDelete Part");
+
+            do
+            {
+                Console.WriteLine("Selections:");
+                Console.WriteLine("1: Delete Laptop");
+                Console.WriteLine("2: Delete Desktop");
+                Console.WriteLine("3: Delete Tablet");
+                Console.WriteLine("0: Return to main menu");
+                Console.Write("> ");
+                selection = Console.ReadLine();
+
+                if (selection.Equals("1"))
+                {
+                    Console.Write("Please enter a part number: ");
+                    pn = Int32.Parse(Console.ReadLine());
+
+                    Laptop laptop = (Laptop)db.GetPart(DB.Table.LAPTOP, pn);
+
+                    if (laptop is null)
+                        Console.WriteLine("No laptop found with that number.");
+                    else
+                        db.DeletePart(laptop);
+                }
+                else if (selection.Equals("2"))
+                {
+                    Console.Write("Please enter a part number: ");
+                    pn = Int32.Parse(Console.ReadLine());
+
+                    Desktop desktop = (Desktop)db.GetPart(DB.Table.DESKTOP, pn);
+
+                    if (desktop is null)
+                        Console.WriteLine("No desktop found with that number.");
+                    else
+                        db.DeletePart(desktop);
+                }
+                else if (selection.Equals("3"))
+                {
+                    Console.Write("Please enter a part number: ");
+                    pn = Int32.Parse(Console.ReadLine());
+
+                    Tablet tablet = (Tablet)db.GetPart(DB.Table.TABLET, pn);
+
+                    if (tablet is null)
+                        Console.WriteLine("No tablet found with that number.");
+                    else
+                        db.DeletePart(tablet);
+                }
+                else if (selection.Equals("0"))
+                {
+                    Console.WriteLine("Returning to the main menu");
+                }
+                else
+                {
+                    Console.WriteLine
+                        ($"Selection \"{selection}\" is not understood");
+                }
+            } while (!selection.Equals("0"));
         }
 
         private static void GetPart(DB db)
@@ -162,7 +225,7 @@ namespace Classing
                     Console.WriteLine
                         ($"Selection \"{selection}\" is not understood");
                 }
-            } while (selection != "0");
+            } while (!selection.Equals("0"));
         }
 
         public static void Main()
@@ -188,7 +251,7 @@ namespace Classing
                         AddPart(db);
                         break;
                     case "2":
-                        Console.WriteLine("Found string \"2\"");
+                        DeletePart(db);
                         break;
                     case "3":
                         GetPart(db);
@@ -200,7 +263,7 @@ namespace Classing
                         Console.WriteLine("Goodbye!");
                         break;
                 }
-            } while (selection != "0");
+            } while (!selection.Equals("0"));
         }
     }
 }
