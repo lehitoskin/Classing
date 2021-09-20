@@ -228,6 +228,44 @@ namespace Classing
             } while (!selection.Equals("0"));
         }
 
+        private static void DisplayTable(DB db)
+        {
+            string selection;
+
+            Console.WriteLine("\tDisplayTable");
+
+            do
+            {
+                Console.WriteLine("Selections:");
+                Console.WriteLine("1: Display Table Laptop");
+                Console.WriteLine("2: Display Table Desktop");
+                Console.WriteLine("3: Display Table Tablet");
+                Console.WriteLine("0: Return to main menu");
+                Console.Write("> ");
+                selection = Console.ReadLine();
+
+                switch (selection)
+                {
+                    case "1":
+                        db.DisplayTable(DB.Table.LAPTOP);
+                        break;
+                    case "2":
+                        db.DisplayTable(DB.Table.DESKTOP);
+                        break;
+                    case "3":
+                        db.DisplayTable(DB.Table.TABLET);
+                        break;
+                    case "0":
+                        Console.WriteLine("Returning to the main menu");
+                        break;
+                    default:
+                        Console.WriteLine
+                            ($"Selection \"{selection}\" is not understood.");
+                        break;
+                }
+            } while (!selection.Equals("0"));
+        }
+
         public static void Main()
         {
             DB db = new();
@@ -240,7 +278,7 @@ namespace Classing
                 Console.WriteLine("1: Add New Part");
                 Console.WriteLine("2: Delete Part");
                 Console.WriteLine("3: Get Part By Number And Type");
-                Console.WriteLine("4: List A Table");
+                Console.WriteLine("4: Display A Table");
                 Console.WriteLine("0: Exit");
                 Console.Write("> ");
                 selection = Console.ReadLine();
@@ -257,7 +295,7 @@ namespace Classing
                         GetPart(db);
                         break;
                     case "4":
-                        Console.WriteLine("Found string \"4\"");
+                        DisplayTable(db);
                         break;
                     case "0":
                         Console.WriteLine("Goodbye!");
